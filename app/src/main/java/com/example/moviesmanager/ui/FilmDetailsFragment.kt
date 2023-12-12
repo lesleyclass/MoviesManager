@@ -13,12 +13,14 @@ import android.widget.RadioButton
 import android.widget.RadioGroup
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
+import androidx.core.view.get
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.example.moviesmanager.constants.Constants.ID_FILM
 import com.example.moviesmanager.data.Film
 import com.example.moviesmanager.R
+import com.example.moviesmanager.constants.Constants.IS_GONE_FILM_DETAILS
 import com.example.moviesmanager.databinding.FragmentFilmDetailsBinding
 import com.example.moviesmanager.viewmodel.FilmsViewModel
 import com.google.android.material.snackbar.Snackbar
@@ -33,7 +35,7 @@ class FilmDetailsFragment : Fragment() {
     private lateinit var radioButtonYes: RadioButton
     private lateinit var radioButtonNo: RadioButton
 
-    lateinit var viewModel: FilmsViewModel
+    private lateinit var viewModel: FilmsViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -66,10 +68,11 @@ class FilmDetailsFragment : Fragment() {
         }
 
         val idFilm = requireArguments().getInt(ID_FILM)
+        val isGoneFilmDetails = requireArguments().getBoolean(IS_GONE_FILM_DETAILS)
 
         viewModel.getFilmById(idFilm)
 
-        viewModel.films.observe(viewLifecycleOwner) { result ->
+        viewModel.film.observe(viewLifecycleOwner) { result ->
             result?.let {
                 film = result
                 nameEditText.setText(film.name)
@@ -84,38 +87,62 @@ class FilmDetailsFragment : Fragment() {
             }
         }
 
+        if (isGoneFilmDetails) unableDetailsElement()
+
         val menuHost: MenuHost = requireActivity()
 
         menuHost.addMenuProvider(object : MenuProvider {
             override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
-                menuInflater.inflate(R.menu.film_details_menu, menu)
+                menuInflater.inflate(R.menu.film_details_menu, menu).apply {
+                    if (isGoneFilmDetails) {
+                        menu[0].isVisible = false
+                    }
+                }
             }
 
             override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
                 return when (menuItem.itemId) {
                     R.id.actionEditFilm -> {
-
-                        film.name = nameEditText.text.toString()
-                        film.releaseYear = releaseYearEditText.text.toString()
-                        film.isBeenWatched = radioButtonYes.isChecked
-                        viewModel.update(film)
-
-                        Snackbar.make(binding.root, getString(R.string.action_edit_film_label), Snackbar.LENGTH_SHORT).show()
-
-                        findNavController().popBackStack()
+                        actionEditFilm()
                         true
                     }
                     R.id.actionDeleteFilm ->{
-                        viewModel.delete(film)
-
-                        Snackbar.make(binding.root, getString(R.string.action_delete_film_label), Snackbar.LENGTH_SHORT).show()
-
-                        findNavController().popBackStack()
+                        actionDeleteFilm()
                         true
                     }
                     else -> false
                 }
             }
         }, viewLifecycleOwner, Lifecycle.State.RESUMED)
+    }
+
+    private fun actionEditFilm() {
+        film.name = nameEditText.text.toString()
+        film.releaseYear = releaseYearEditText.text.toString()
+        film.isBeenWatched = radioButtonYes.isChecked
+        viewModel.update(film)
+
+        Snackbar.make(binding.root, getString(R.string.action_edit_film_label), Snackbar.LENGTH_SHORT).show()
+
+        findNavController().popBackStack()
+    }
+
+    private fun actionDeleteFilm() {
+        viewModel.delete(film)
+
+        Snackbar.make(binding.root, getString(R.string.action_delete_film_label), Snackbar.LENGTH_SHORT).show()
+
+        findNavController().popBackStack()
+    }
+
+    private fun unableDetailsElement() {
+        nameEditText.isClickable = false
+        nameEditText.isEnabled = false
+        releaseYearEditText.isClickable = false
+        releaseYearEditText.isEnabled = false
+        radioButtonNo.isClickable = false
+        radioButtonNo.isEnabled = false
+        radioButtonYes.isClickable = false
+        radioButtonYes.isEnabled = false
     }
 }

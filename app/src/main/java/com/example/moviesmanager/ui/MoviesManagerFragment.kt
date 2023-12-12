@@ -26,6 +26,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.moviesmanager.R
 import com.example.moviesmanager.adapter.FilmAdapter
 import com.example.moviesmanager.constants.Constants.ID_FILM
+import com.example.moviesmanager.constants.Constants.IS_GONE_FILM_DETAILS
 import com.example.moviesmanager.databinding.FragmentMoviesManagerBinding
 import com.example.moviesmanager.viewmodel.FilmsViewModel
 import com.google.android.material.snackbar.Snackbar
@@ -116,6 +117,7 @@ class MoviesManagerFragment : Fragment() {
 
                 val bundle = Bundle()
                 bundle.putInt(ID_FILM, itemClick.id)
+                bundle.putBoolean(IS_GONE_FILM_DETAILS, true)
 
                 findNavController().navigate(
                     R.id.action_moviesManagerFragment_to_filmDetailsFragment,
@@ -137,11 +139,28 @@ class MoviesManagerFragment : Fragment() {
             ) = true
 
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-                Snackbar.make(
-                    binding.moviesManagerFragmentScreen,
-                    if (direction == ItemTouchHelper.RIGHT) "Deletar" else "Editar",
-                    Snackbar.LENGTH_SHORT
-                ).show()
+                val position = viewHolder.adapterPosition
+                val item = filmAdapter.filmsListFilterable[position]
+                val itemId = item.id
+
+                if (direction == ItemTouchHelper.RIGHT) {
+                    viewModel.delete(item)
+                    filmAdapter.notifyItemRemoved(position)
+
+                    Snackbar.make(
+                        binding.moviesManagerFragmentScreen,
+                        "Deletar",
+                        Snackbar.LENGTH_SHORT
+                    ).show()
+                } else {
+                    val bundle = Bundle()
+                    bundle.putInt(ID_FILM, itemId)
+
+                    findNavController().navigate(
+                        R.id.action_moviesManagerFragment_to_filmDetailsFragment,
+                        bundle
+                    )
+                }
             }
 
             override fun onChildDraw(

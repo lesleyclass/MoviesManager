@@ -13,7 +13,7 @@ import kotlinx.coroutines.launch
 class FilmsViewModel(application: Application): AndroidViewModel(application) {
     private val repository: FilmRepository
     var allFilms : LiveData<List<Film>>
-    lateinit var films : LiveData<Film>
+    lateinit var film : LiveData<Film>
 
     init {
         val dao = FilmDatabase.getDatabase(application).filmDAO()
@@ -35,7 +35,7 @@ class FilmsViewModel(application: Application): AndroidViewModel(application) {
 
     fun getFilmById(id: Int) {
         viewModelScope.launch {
-           films = repository.getFilmById(id)
+           film = repository.getFilmById(id)
         }
     }
 }
