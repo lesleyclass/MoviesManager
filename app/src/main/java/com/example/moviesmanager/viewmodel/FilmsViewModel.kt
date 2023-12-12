@@ -21,16 +21,16 @@ class FilmsViewModel(application: Application): AndroidViewModel(application) {
         allFilms = repository.getAllContacts()
     }
 
-    fun insert(films: Film) = viewModelScope.launch(Dispatchers.IO){
-        repository.insert(films)
+    fun insert(film: Film) = viewModelScope.launch(Dispatchers.IO){
+        repository.insert(film)
     }
 
-    fun update(films: Film) = viewModelScope.launch(Dispatchers.IO){
-        repository.update(films)
+    fun update(film: Film) = viewModelScope.launch(Dispatchers.IO){
+        repository.update(film)
     }
 
-    fun delete(films: Film) = viewModelScope.launch(Dispatchers.IO){
-        repository.delete(films)
+    fun delete(film: Film) = viewModelScope.launch(Dispatchers.IO){
+        repository.delete(film)
     }
 
     fun getFilmById(id: Int) {

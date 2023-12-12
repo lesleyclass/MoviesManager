@@ -13,7 +13,7 @@ import com.example.moviesmanager.databinding.FilmItemBinding
 class FilmAdapter: RecyclerView.Adapter<FilmAdapter.FilmViewHolder>(),
     Filterable {
 
-    var listener: FilmListener?=null
+    var listener: FilmListener? = null
     var filmsList = ArrayList<Film>()
     var filmsListFilterable = ArrayList<Film>()
     private lateinit var binding: FilmItemBinding
