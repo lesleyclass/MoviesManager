@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/film_list_nav"
+    app:startDestination="@id/moviesManagerFragment">
+
+    <fragment
+        android:id="@+id/moviesManagerFragment"
+        android:name="com.example.moviesmanager.ui.MoviesManagerFragment"
+        android:label="Movies Manager"
+        android:background="@color/background_color"
+        tools:layout="@layout/fragment_movies_manager" >
+        <action
+            android:id="@+id/action_moviesManagerFragment_to_newFilmFragment"
+            app:destination="@id/newFilmFragment" />
+        <action
+            android:id="@+id/action_moviesManagerFragment_to_filmDetailsFragment"
+            app:destination="@id/filmDetailsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/newFilmFragment"
+        android:name="com.example.moviesmanager.ui.NewFilmFragment"
+        android:label="Novo Filme"
+        tools:layout="@layout/fragment_new_film" />
+    <fragment
+        android:id="@+id/filmDetailsFragment"
+        android:name="com.example.moviesmanager.ui.FilmDetailsFragment"
+        android:label="Detalhes do Filme"
+        tools:layout="@layout/fragment_film_details" />
+</navigation>
