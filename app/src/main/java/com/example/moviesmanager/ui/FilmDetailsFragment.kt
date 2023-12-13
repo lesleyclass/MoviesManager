@@ -11,6 +11,7 @@ import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.RadioButton
 import android.widget.RadioGroup
+import android.widget.Spinner
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
 import androidx.core.view.get
@@ -20,6 +21,7 @@ import androidx.navigation.fragment.findNavController
 import com.example.moviesmanager.constants.Constants.ID_FILM
 import com.example.moviesmanager.data.Film
 import com.example.moviesmanager.R
+import com.example.moviesmanager.adapter.SpinnerAdapter
 import com.example.moviesmanager.constants.Constants.IS_GONE_FILM_DETAILS
 import com.example.moviesmanager.databinding.FragmentFilmDetailsBinding
 import com.example.moviesmanager.viewmodel.FilmsViewModel
@@ -33,8 +35,8 @@ class FilmDetailsFragment : Fragment() {
     private lateinit var releaseYearEditText: EditText
     private lateinit var studioEditText: EditText
     private lateinit var durationEditText: EditText
-    private lateinit var scoreEditText: EditText
-    private lateinit var genderEditText: EditText
+    private lateinit var spinnerScore: Spinner
+    private lateinit var spinnerGender: Spinner
     private lateinit var isBeenWatchedRadioGroup: RadioGroup
     private lateinit var radioButtonYes: RadioButton
     private lateinit var radioButtonNo: RadioButton
@@ -57,13 +59,17 @@ class FilmDetailsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        spinnerGender = view.findViewById(R.id.spinnerGender)
+        spinnerGender.adapter = SpinnerAdapter(requireContext(), viewModel.genders)
+        spinnerScore = view.findViewById(R.id.spinnerScore)
+        spinnerScore.adapter = SpinnerAdapter(requireContext(), viewModel.scores)
 
         nameEditText = binding.commonLayout.editTextNome
         releaseYearEditText = binding.commonLayout.editTextReleaseYear
         studioEditText = binding.commonLayout.editTextStudio
         durationEditText = binding.commonLayout.editTextDuration
-        scoreEditText = binding.commonLayout.editTextScore
-        genderEditText = binding.commonLayout.editTextGender
+        spinnerScore = binding.commonLayout.spinnerScore
+        spinnerGender = binding.commonLayout.spinnerGender
         isBeenWatchedRadioGroup = binding.commonLayout.isBeenWatchedRadioGroup
         radioButtonYes = binding.commonLayout.radioButtonYes
         radioButtonNo = binding.commonLayout.radioButtonNo
@@ -87,8 +93,8 @@ class FilmDetailsFragment : Fragment() {
                 releaseYearEditText.setText(film.releaseYear)
                 studioEditText.setText(film.studio)
                 durationEditText.setText(film.duration.toString())
-                scoreEditText.setText(film.score.toString())
-                genderEditText.setText(film.gender)
+                spinnerScore.setSelection(film.scoreIndex)
+                spinnerGender.setSelection(film.genderIndex)
                 if (film.isBeenWatched){
                     radioButtonYes.isChecked = true
                     radioButtonNo.isChecked = false
@@ -133,9 +139,12 @@ class FilmDetailsFragment : Fragment() {
         film.releaseYear = releaseYearEditText.text.toString()
         film.studio = studioEditText.text.toString()
         film.duration = durationEditText.text.toString().toInt()
-        film.score = scoreEditText.text.toString().toInt()
-        film.gender = genderEditText.text.toString()
         film.isBeenWatched = radioButtonYes.isChecked
+        film.score = spinnerScore.selectedItem.toString().toInt()
+        film.scoreIndex = spinnerScore.selectedItemPosition
+        film.gender = spinnerGender.selectedItem.toString()
+        film.genderIndex = spinnerGender.selectedItemPosition
+
         viewModel.update(film)
 
         Snackbar.make(binding.root, getString(R.string.action_edit_film_label), Snackbar.LENGTH_SHORT).show()
@@ -160,13 +169,13 @@ class FilmDetailsFragment : Fragment() {
         studioEditText.isEnabled = false
         durationEditText.isClickable = false
         durationEditText.isEnabled = false
-        scoreEditText.isClickable = false
-        scoreEditText.isEnabled = false
-        genderEditText.isClickable = false
-        genderEditText.isEnabled = false
         radioButtonNo.isClickable = false
         radioButtonNo.isEnabled = false
         radioButtonYes.isClickable = false
         radioButtonYes.isEnabled = false
+        spinnerScore.isClickable = false
+        spinnerScore.isEnabled = false
+        spinnerGender.isClickable = false
+        spinnerGender.isEnabled = false
     }
 }

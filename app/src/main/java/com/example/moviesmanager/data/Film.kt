@@ -16,5 +16,7 @@ data class Film (
     var duration: Int,
     var isBeenWatched: Boolean,
     var score: Int,
+    var scoreIndex: Int,
     var gender: String,
+    var genderIndex: Int,
 )

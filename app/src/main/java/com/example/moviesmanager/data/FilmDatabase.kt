@@ -6,7 +6,7 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.example.moviesmanager.constants.Constants.FILM_LIST_DATABASE_NAME
 
-@Database(entities = [Film::class], version = 2)
+@Database(entities = [Film::class], version = 3)
 abstract class FilmDatabase: RoomDatabase() {
     abstract fun filmDAO(): FilmDAO
 
