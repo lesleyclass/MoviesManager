@@ -38,17 +38,24 @@ class FilmAdapter: RecyclerView.Adapter<FilmAdapter.FilmViewHolder>(),
     }
 
     override fun onBindViewHolder(holder: FilmViewHolder, position: Int) {
-        val bitmap = BitmapFactory.decodeResource(holder.itemView.context.resources,
+        val iconCheckBitmap = BitmapFactory.decodeResource(holder.itemView.context.resources,
             if (filmsListFilterable[position].isBeenWatched) {
                 R.drawable.presence_video_online
             } else {
                 R.drawable.presence_video_busy
             }
         )
+        val iconScoreBitmap = BitmapFactory.decodeResource(
+            holder.itemView.context.resources,
+            R.drawable.btn_star_big_on,
+        )
 
-        holder.nameVH.text = filmsListFilterable[position].name
-        holder.releaseYearVH.text = filmsListFilterable[position].releaseYear
-        holder.iconCheck.setImageBitmap(bitmap)
+        holder.name.text = filmsListFilterable[position].name
+        holder.releaseYear.text = filmsListFilterable[position].releaseYear
+        holder.scoreText.text = "${filmsListFilterable[position].score}/10"
+        holder.iconScore.setImageBitmap(iconScoreBitmap)
+        holder.iconCheck.setImageBitmap(iconCheckBitmap)
+
 
     }
 
@@ -58,8 +65,10 @@ class FilmAdapter: RecyclerView.Adapter<FilmAdapter.FilmViewHolder>(),
 
     inner class FilmViewHolder(view: FilmItemBinding): RecyclerView.ViewHolder(view.root)
     {
-        val nameVH = view.name
-        val releaseYearVH = view.releaseYear
+        val name = view.name
+        val releaseYear = view.releaseYear
+        val scoreText = view.scoreText
+        val iconScore = view.iconScore
         val iconCheck = view.iconCheck
 
         init {
