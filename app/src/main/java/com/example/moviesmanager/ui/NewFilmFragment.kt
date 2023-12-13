@@ -1,5 +1,9 @@
 package com.example.moviesmanager.ui
 
+import android.content.Context
+import android.content.Context.INPUT_METHOD_SERVICE
+import android.database.sqlite.SQLiteConstraintException
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.Menu
@@ -7,6 +11,9 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
+import androidx.annotation.RequiresApi
+import androidx.core.content.ContextCompat.getSystemService
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
@@ -18,6 +25,7 @@ import com.example.moviesmanager.R
 import com.example.moviesmanager.databinding.FragmentNewFilmBinding
 import com.example.moviesmanager.viewmodel.FilmsViewModel
 import com.google.android.material.snackbar.Snackbar
+import kotlin.random.Random
 
 class NewFilmFragment : Fragment() {
     private var _binding: FragmentNewFilmBinding? = null
@@ -52,20 +60,38 @@ class NewFilmFragment : Fragment() {
             override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
                 return when (menuItem.itemId) {
                     R.id.actionSaveFilm -> {
-                        val name = binding.commonLayout.editTextNome.text.toString()
-                        val releaseYear = binding.commonLayout.editTextReleaseYear.text.toString()
-                        val isBeenWatched = binding.commonLayout.radioButtonYes.isChecked
-                        val film = Film(0, name, releaseYear, isBeenWatched)
+                        view.clearFocus()
+                        val inputMethodManager = view.context.getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
+                        inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
 
-                        viewModel.insert(film)
+                        val film = Film(
+                            id = generateId(),
+                            name = binding.commonLayout.editTextNome.text.toString(),
+                            releaseYear = binding.commonLayout.editTextReleaseYear.text.toString(),
+                            studio = binding.commonLayout.editTextStudio.text.toString(),
+                            duration = binding.commonLayout.editTextDuration.text.toString().toInt(),
+                            isBeenWatched = binding.commonLayout.radioButtonYes.isChecked,
+                            score = binding.commonLayout.editTextScore.text.toString().toInt(),
+                            gender = binding.commonLayout.editTextGender.text.toString(),
+                        )
 
-                        Snackbar.make(binding.root, getString(R.string.action_save_film_label), Snackbar.LENGTH_SHORT).show()
-                        findNavController().popBackStack()
+                        if(!viewModel.insert(film)){
+                            Snackbar.make(binding.commonLayoutScreen, getString(R.string.action_save_film_label), Snackbar.LENGTH_SHORT).show()
+                            findNavController().popBackStack()
+                        } else {
+                            Snackbar.make(binding.commonLayoutScreen, "Esse titulo de filme já existe na sua lista", Snackbar.LENGTH_SHORT).show()
+                        }
                         true
                     }
-                    else -> false
+                    else -> {
+                        false
+                    }
                 }
             }
         }, viewLifecycleOwner, Lifecycle.State.RESUMED)
+    }
+
+    private fun generateId(): Int {
+        return Random.nextInt()
     }
 }

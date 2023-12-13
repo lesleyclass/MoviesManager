@@ -21,8 +21,12 @@ class FilmsViewModel(application: Application): AndroidViewModel(application) {
         allFilms = repository.getAllContacts()
     }
 
-    fun insert(film: Film) = viewModelScope.launch(Dispatchers.IO){
-        repository.insert(film)
+    fun insert(film: Film): Boolean {
+        var isSuccess = false
+        viewModelScope.launch(Dispatchers.IO){
+            isSuccess = repository.insert(film)
+        }
+        return isSuccess
     }
 
     fun update(film: Film) = viewModelScope.launch(Dispatchers.IO){

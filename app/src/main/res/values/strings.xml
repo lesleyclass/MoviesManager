@@ -5,7 +5,11 @@
     <string name="action_save_film_label">Filme inserido</string>
     <string name="film_name">Nome do Filme</string>
     <string name="film_release_year">Ano de Lançamento</string>
+    <string name="film_studio">Studio</string>
+    <string name="film_duration">Duração em minutos</string>
     <string name="film_is_been_watched">Já Assistir?</string>
+    <string name="film_score">Nota</string>
+    <string name="film_gender">Genero</string>
     <string name="button_yes">Sim</string>
     <string name="button_no">Não</string>
     <string name="film_title">Título</string>
@@ -15,6 +19,10 @@
     <string name="save_item_menu">Salvar</string>
     <string name="delete_item_menu">Excluir</string>
     <string name="search_item_menu">Pesquisar</string>
-    <string name="film_name_hint">Digite o nome do filme aqui!</string>
-    <string name="film_release_year_hint">Digite de lançamento do filme aqui!</string>
+    <string name="film_name_hint">Nome do filme</string>
+    <string name="film_release_year_hint">Ano de lançamento do filme</string>
+    <string name="film_studio_hint">Studio do filme</string>
+    <string name="film_duration_hint">Duração do filme</string>
+    <string name="film_score_hint">Nota do filme</string>
+    <string name="film_gender_hint">Genero do filme</string>
 </resources>

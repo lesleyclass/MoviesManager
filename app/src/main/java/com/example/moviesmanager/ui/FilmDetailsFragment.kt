@@ -31,6 +31,10 @@ class FilmDetailsFragment : Fragment() {
     lateinit var film: Film
     private lateinit var nameEditText: EditText
     private lateinit var releaseYearEditText: EditText
+    private lateinit var studioEditText: EditText
+    private lateinit var durationEditText: EditText
+    private lateinit var scoreEditText: EditText
+    private lateinit var genderEditText: EditText
     private lateinit var isBeenWatchedRadioGroup: RadioGroup
     private lateinit var radioButtonYes: RadioButton
     private lateinit var radioButtonNo: RadioButton
@@ -56,6 +60,10 @@ class FilmDetailsFragment : Fragment() {
 
         nameEditText = binding.commonLayout.editTextNome
         releaseYearEditText = binding.commonLayout.editTextReleaseYear
+        studioEditText = binding.commonLayout.editTextStudio
+        durationEditText = binding.commonLayout.editTextDuration
+        scoreEditText = binding.commonLayout.editTextScore
+        genderEditText = binding.commonLayout.editTextGender
         isBeenWatchedRadioGroup = binding.commonLayout.isBeenWatchedRadioGroup
         radioButtonYes = binding.commonLayout.radioButtonYes
         radioButtonNo = binding.commonLayout.radioButtonNo
@@ -77,6 +85,10 @@ class FilmDetailsFragment : Fragment() {
                 film = result
                 nameEditText.setText(film.name)
                 releaseYearEditText.setText(film.releaseYear)
+                studioEditText.setText(film.studio)
+                durationEditText.setText(film.duration.toString())
+                scoreEditText.setText(film.score.toString())
+                genderEditText.setText(film.gender)
                 if (film.isBeenWatched){
                     radioButtonYes.isChecked = true
                     radioButtonNo.isChecked = false
@@ -119,6 +131,10 @@ class FilmDetailsFragment : Fragment() {
     private fun actionEditFilm() {
         film.name = nameEditText.text.toString()
         film.releaseYear = releaseYearEditText.text.toString()
+        film.studio = studioEditText.text.toString()
+        film.duration = durationEditText.text.toString().toInt()
+        film.score = scoreEditText.text.toString().toInt()
+        film.gender = genderEditText.text.toString()
         film.isBeenWatched = radioButtonYes.isChecked
         viewModel.update(film)
 
@@ -140,6 +156,14 @@ class FilmDetailsFragment : Fragment() {
         nameEditText.isEnabled = false
         releaseYearEditText.isClickable = false
         releaseYearEditText.isEnabled = false
+        studioEditText.isClickable = false
+        studioEditText.isEnabled = false
+        durationEditText.isClickable = false
+        durationEditText.isEnabled = false
+        scoreEditText.isClickable = false
+        scoreEditText.isEnabled = false
+        genderEditText.isClickable = false
+        genderEditText.isEnabled = false
         radioButtonNo.isClickable = false
         radioButtonNo.isEnabled = false
         radioButtonYes.isClickable = false
