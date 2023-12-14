@@ -8,4 +8,9 @@
         android:title="@string/search_item_menu"
         app:showAsAction="always"
         app:actionViewClass="androidx.appcompat.widget.SearchView"/>
+    <item
+        android:id="@+id/actionOrder"
+        android:title="@string/order_item_menu"
+        app:showAsAction="always"
+        app:actionViewClass="androidx.appcompat.widget.AppCompatSpinner"/>
 </menu>

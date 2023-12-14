@@ -19,6 +19,7 @@
     <string name="save_item_menu">Salvar</string>
     <string name="delete_item_menu">Excluir</string>
     <string name="search_item_menu">Pesquisar</string>
+    <string name="order_item_menu">Ordena</string>
     <string name="film_name_hint">Nome do filme</string>
     <string name="film_release_year_hint">Ano de lançamento do filme</string>
     <string name="film_studio_hint">Studio do filme</string>

@@ -6,6 +6,7 @@ import android.graphics.Color
 import android.graphics.Rect
 import android.os.Bundle
 import android.util.DisplayMetrics
+import android.util.Log
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.Menu
@@ -13,6 +14,8 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
+import androidx.appcompat.widget.AppCompatSpinner
 import androidx.appcompat.widget.SearchView
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
@@ -25,8 +28,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.moviesmanager.R
 import com.example.moviesmanager.adapter.FilmAdapter
+import com.example.moviesmanager.adapter.SpinnerAdapter
 import com.example.moviesmanager.constants.Constants.ID_FILM
 import com.example.moviesmanager.constants.Constants.IS_GONE_FILM_DETAILS
+import com.example.moviesmanager.constants.Constants.ORDER_SPINNER_OPTIONS
 import com.example.moviesmanager.databinding.FragmentMoviesManagerBinding
 import com.example.moviesmanager.viewmodel.FilmsViewModel
 import com.google.android.material.snackbar.Snackbar
@@ -42,6 +47,8 @@ class MoviesManagerFragment : Fragment() {
     private lateinit var viewModel: FilmsViewModel
     private lateinit var dragHelper: ItemTouchHelper
     private lateinit var swipeHelper: ItemTouchHelper
+    private lateinit var orderSpinner: AppCompatSpinner
+    private var listOrder: Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -68,6 +75,27 @@ class MoviesManagerFragment : Fragment() {
                 menuInflater.inflate(R.menu.list_films_menu, menu)
 
                 val searchView = menu.findItem(R.id.actionSearch).actionView as SearchView
+                orderSpinner = menu.findItem(R.id.actionOrder).actionView as AppCompatSpinner
+                val adapter = SpinnerAdapter(context!!, ORDER_SPINNER_OPTIONS)
+                orderSpinner.adapter = adapter
+                orderSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+                    override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                        when(ORDER_SPINNER_OPTIONS[position]){
+                            ORDER_SPINNER_OPTIONS[0] -> {
+                                filmAdapter.sortNameFilms()
+                                listOrder = 0
+                            }
+                            ORDER_SPINNER_OPTIONS[1] -> {
+                                filmAdapter.sortScoreFilms()
+                                listOrder = 1
+                            }
+                            ORDER_SPINNER_OPTIONS[2] -> { listOrder = 2 }
+                        }
+                    }
+
+                    override fun onNothingSelected(parent: AdapterView<*>?){}
+                }
+                orderSpinner.setSelection(listOrder)
                 searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
                     override fun onQueryTextSubmit(p0: String?): Boolean {
                         return true
@@ -78,6 +106,8 @@ class MoviesManagerFragment : Fragment() {
                         return true
                     }
                 })
+
+
             }
 
             override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
@@ -228,6 +258,7 @@ class MoviesManagerFragment : Fragment() {
 
                 viewModel.allFilms.value?.let { Collections.swap(it, from, to) }
                 filmAdapter.notifyItemMoved(from, to)
+                orderSpinner.setSelection(2)
                 return true
             }
 

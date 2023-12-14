@@ -24,9 +24,28 @@ class FilmAdapter: RecyclerView.Adapter<FilmAdapter.FilmViewHolder>(),
         notifyDataSetChanged()
     }
 
-    fun setClickListener(listener: FilmListener)
-    {
+    fun setClickListener(listener: FilmListener) {
         this.listener = listener
+    }
+
+    fun sortNameFilms() {
+        val filmsOrderList = arrayListOf<Film>()
+        filmsList.sortedWith { film1, film2 ->
+            film2.name.compareTo(film1.name)
+        }.forEach { filmsOrderList.add(it) }
+        filmsList = filmsOrderList
+        updateList(filmsList)
+        notifyDataSetChanged()
+    }
+
+    fun sortScoreFilms() {
+        val filmsOrderList = arrayListOf<Film>()
+        filmsList.sortedWith { film1, film2 ->
+            film2.score.compareTo(film1.score)
+        }.forEach { filmsOrderList.add(it) }
+        filmsList = filmsOrderList
+        updateList(filmsList)
+        notifyDataSetChanged()
     }
 
     override fun onCreateViewHolder(
@@ -55,8 +74,6 @@ class FilmAdapter: RecyclerView.Adapter<FilmAdapter.FilmViewHolder>(),
         holder.scoreText.text = "${filmsListFilterable[position].score}/10"
         holder.iconScore.setImageBitmap(iconScoreBitmap)
         holder.iconCheck.setImageBitmap(iconCheckBitmap)
-
-
     }
 
     override fun getItemCount(): Int {
